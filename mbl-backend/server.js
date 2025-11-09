@@ -28,7 +28,7 @@ console.log("  EMAIL_PASS:", process.env.EMAIL_PASS ? "✅ Loaded" : "❌ Missin
 // 🚀 EXPRESS INIT
 // ==============================
 const app = express();
-app.use(cors());
+app.use(cors({ origin: "*", methods: ["GET", "POST"], allowedHeaders: ["Content-Type"] }));
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 
@@ -145,6 +145,56 @@ app.get("/api/test-email", async (req, res) => {
   }
 });
 
+
+// ==============================
+// 💳 Stripe Payment Intent API
+// ==============================
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2024-06-20",
+});
+
+app.post("/api/create-payment-intent", async (req, res) => {
+  try {
+    const { amount, currency = "usd" } = req.body;
+
+    if (!amount) {
+      return res.status(400).json({ error: "Amount is required" });
+    }
+
+    // 1️⃣ Create or reuse a Stripe customer
+    const customer = await stripe.customers.create({
+      name: "Active Patient User",
+      email: "demo@activepatient.com",
+    });
+
+    // 2️⃣ Create an ephemeral key for the customer
+    const ephemeralKey = await stripe.ephemeralKeys.create(
+      { customer: customer.id },
+      { apiVersion: "2024-06-20" }
+    );
+
+    // 3️⃣ Create a PaymentIntent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency,
+      customer: customer.id,
+      automatic_payment_methods: { enabled: true },
+    });
+
+    // ✅ Respond with secrets needed by the mobile app
+    res.json({
+      paymentIntent: paymentIntent.client_secret,
+      ephemeralKey: ephemeralKey.secret,
+      customer: customer.id,
+    });
+  } catch (err) {
+    console.error("❌ Stripe Error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+
 // ==============================
 // 🟦 HEALTH CHECK ENDPOINT
 // ==============================
@@ -158,41 +208,41 @@ app.get("/", (req, res) => {
 });
 
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2024-06-20",
-});
+// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+//   apiVersion: "2024-06-20",
+// });
 
-app.post("/api/create-payment-intent", async (req, res) => {
-  try {
-    const { amount, currency = "usd" } = req.body;
+// app.post("/api/create-payment-intent", async (req, res) => {
+//   try {
+//     const { amount, currency = "usd" } = req.body;
 
-    const customer = await stripe.customers.create({
-      name: "Active Patient User",
-      email: "demo@activepatient.com",
-    });
+//     const customer = await stripe.customers.create({
+//       name: "Active Patient User",
+//       email: "demo@activepatient.com",
+//     });
 
-    const ephemeralKey = await stripe.ephemeralKeys.create(
-      { customer: customer.id },
-      { apiVersion: "2024-06-20" }
-    );
+//     const ephemeralKey = await stripe.ephemeralKeys.create(
+//       { customer: customer.id },
+//       { apiVersion: "2024-06-20" }
+//     );
 
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency,
-      customer: customer.id,
-      automatic_payment_methods: { enabled: true },
-    });
+//     const paymentIntent = await stripe.paymentIntents.create({
+//       amount,
+//       currency,
+//       customer: customer.id,
+//       automatic_payment_methods: { enabled: true },
+//     });
 
-    res.json({
-      paymentIntent: paymentIntent.client_secret,
-      ephemeralKey: ephemeralKey.secret,
-      customer: customer.id,
-    });
-  } catch (err) {
-    console.error("❌ Stripe Error:", err);
-    res.status(400).json({ error: err.message });
-  }
-});
+//     res.json({
+//       paymentIntent: paymentIntent.client_secret,
+//       ephemeralKey: ephemeralKey.secret,
+//       customer: customer.id,
+//     });
+//   } catch (err) {
+//     console.error("❌ Stripe Error:", err);
+//     res.status(400).json({ error: err.message });
+//   }
+// });
 
 // ==============================
 // 🚀 START SERVER
@@ -204,9 +254,19 @@ const server = app.listen(PORT, () => {
   console.log("✅ Routes registered successfully.");
 });
 
-// ==============================
+// 🕒 Internal Keep-Alive (DB Health Check)
+setInterval(async () => {
+  try {
+    const pool = await sql.connect(global.dbConfig);
+    const result = await pool.request().query("SELECT GETDATE() AS server_time");
+    console.log("🔄 Keep-alive DB check successful:", result.recordset[0].server_time);
+    pool.close();
+  } catch (err) {
+    console.error("⚠️ Keep-alive DB check failed:", err.message);
+  }
+}, 300000); // 5 minutes
+
 // 🧹 Graceful Shutdown
-// ==============================
 process.on("SIGINT", async () => {
   console.log("\n🛑 Shutting down server...");
   await sql.close();
