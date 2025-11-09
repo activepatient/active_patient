@@ -1,0 +1,52 @@
+# Learn more: https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# ─── Node / Dependencies ────────────────────────────────
+node_modules/
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+package-lock.json
+
+# ─── Expo / React Native ────────────────────────────────
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+*.tsbuildinfo
+app-example
+
+# ─── Native Build Artifacts ─────────────────────────────
+/ios
+/android
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# ─── Metro Bundler ──────────────────────────────────────
+.metro-health-check*
+
+# ─── macOS / System Files ───────────────────────────────
+.DS_Store
+*.pem
+
+# ─── Environment & Secrets ──────────────────────────────
+.env
+.env*.local
+mbl-backend/.env
+
+# ─── Uploaded / Generated Files ─────────────────────────
+mbl-backend/uploads/
+mbl-backend/temp/
+uploads/
+*.log
+
+# ─── IDE / Editor Settings ──────────────────────────────
+.vscode/
+.idea/
+
+# ─── Misc ───────────────────────────────────────────────
+Thumbs.db
