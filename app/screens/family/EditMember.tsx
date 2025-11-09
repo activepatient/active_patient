@@ -19,7 +19,7 @@
 // // import Toast from "react-native-root-toast";
 // // import { fetchMemberById, updateMember } from "../../../api/memberApi";
 
-// // const BASE_URL = "https://isela-ungrumpy-undiligently.ngrok-free.dev/api/member";
+// // const BASE_URL = "https://active-patient.onrender.com/api/member";
 
 // // export default function EditMember() {
 // //   const router = useRouter();

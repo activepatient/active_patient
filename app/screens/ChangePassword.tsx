@@ -199,18 +199,18 @@ import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
-  Alert,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import Toast from "react-native-root-toast";
 
-const BASE_API = "https://isela-ungrumpy-undiligently.ngrok-free.dev";
+const BASE_API = "https://active-patient.onrender.com";
 
 export default function ChangePasswordScreen() {
   const [oldPassword, setOldPassword] = useState("");

@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // 🌐 Update this to your actual backend route
-const BASE_URL = "https://isela-ungrumpy-undiligently.ngrok-free.dev/api/member/bills/upload";
+const BASE_URL = "https://active-patient.onrender.com/api/member/bills/upload";
 
 export interface BillUploadPayload {
   MemberID: number;
@@ -44,7 +44,7 @@ export async function getBillsByMember(memberId: number) {
   try {
     const token = await AsyncStorage.getItem("token");
     const res = await fetch(
-      `https://isela-ungrumpy-undiligently.ngrok-free.dev/api/member/bills/${memberId}`,
+      `https://active-patient.onrender.com/api/member/bills/${memberId}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }

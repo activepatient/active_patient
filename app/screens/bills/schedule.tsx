@@ -256,7 +256,7 @@ export default function Schedule() {
     onPress={() =>
       router.push({
         pathname: "/screens/bills/upgradepro",
-        params: { source: "schedule" }, // ✅ relative path works fine
+        params: { source: "schedule" }, 
       })
     }
   >

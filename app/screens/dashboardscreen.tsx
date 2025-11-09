@@ -1,14 +1,14 @@
 import { useRouter } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  ActivityIndicator,
-  Dimensions,
-  Platform,
-  RefreshControl,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  View,
+    ActivityIndicator,
+    Dimensions,
+    Platform,
+    RefreshControl,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../components/authContext";
@@ -29,7 +29,7 @@ import TotalOwedChart from "../../components/Dashboard/TotalOwedChart";
 import UpcomingRenewals from "../../components/Dashboard/UpcomingRenewals";
 import WelcomeModule from "../../components/Dashboard/WelcomeModule";
 
-const BASE_API = "https://isela-ungrumpy-undiligently.ngrok-free.dev";
+const BASE_API = "https://active-patient.onrender.com";
 const screenWidth = Dimensions.get("window").width;
 
 export default function DashboardScreen() {

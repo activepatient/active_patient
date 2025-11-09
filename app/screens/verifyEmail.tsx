@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-root-toast";
 
-const BASE_API = "https://isela-ungrumpy-undiligently.ngrok-free.dev";
+const BASE_API = "https://active-patient.onrender.com";
 
 export default function VerifyEmail() {
   const { email } = useLocalSearchParams(); // ✅ get email passed from register

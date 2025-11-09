@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // 🔗 Base URL for your backend API
-const BASE_URL = "https://isela-ungrumpy-undiligently.ngrok-free.dev/api/member";
+const BASE_URL = "https://active-patient.onrender.com/api/member";
 
 /* ------------------------------------------------------------
    ✅ Get relationship types (for dropdowns)

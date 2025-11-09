@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 // API URL from Expo config or fallback
-const API_URL = "https://isela-ungrumpy-undiligently.ngrok-free.dev/api";
+const API_URL = "https://active-patient.onrender.com/api";
 console.log("✅ Loaded API Base URL:", API_URL);
 
 // Auth token helpers

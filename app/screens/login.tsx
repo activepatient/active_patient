@@ -16,7 +16,7 @@
 // import Toast from "react-native-root-toast";
 // import { useAuth } from "../../components/authContext";
 
-// const BASE_API = "https://isela-ungrumpy-undiligently.ngrok-free.dev";
+// const BASE_API = "https://active-patient.onrender.com";
 
 // export default function LoginScreen() {
 //   const [selectedTab, setSelectedTab] = useState<"web" | "mobile">("web");
@@ -391,14 +391,14 @@ import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
-  Alert,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    Pressable,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import Toast from "react-native-root-toast";
 import { useAuth } from "../../components/authContext";
@@ -406,7 +406,7 @@ import { useAuth } from "../../components/authContext";
 // ✅ Must be called once per app for proper OAuth redirect handling
 WebBrowser.maybeCompleteAuthSession();
 
-const BASE_API = "https://isela-ungrumpy-undiligently.ngrok-free.dev";
+const BASE_API = "https://active-patient.onrender.com";
 
 export default function LoginScreen() {
   const [selectedTab, setSelectedTab] = useState<"web" | "mobile">("web");

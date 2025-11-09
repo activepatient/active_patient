@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const BASE_URL = "https://isela-ungrumpy-undiligently.ngrok-free.dev/api/insurance"; // 🔗 ngrok backend URL (replace with Azure URL later)
+const BASE_URL = "https://active-patient.onrender.com/api/insurance"; // 🔗 ngrok backend URL (replace with Azure URL later)
 
 /**
  * ✅ Fetch all insurance records for a given member

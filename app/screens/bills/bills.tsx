@@ -438,7 +438,7 @@
 //     try {
 //       const user = JSON.parse((await AsyncStorage.getItem("user")) || "{}");
 //       const res = await fetch(
-//         `https://isela-ungrumpy-undiligently.ngrok-free.dev/api/member/list/${user.id}`
+//         `https://active-patient.onrender.com/api/member/list/${user.id}`
 //       );
 //       const data = await res.json();
 //       const formatted = [
@@ -1321,6 +1321,400 @@
 // });
 
 
+// import { Ionicons } from "@expo/vector-icons";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
+// import DateTimePicker from "@react-native-community/datetimepicker";
+// import { useRouter } from "expo-router";
+// import * as Sharing from "expo-sharing";
+// import React, { useEffect, useState } from "react";
+// import {
+//   FlatList,
+//   Image,
+//   ScrollView,
+//   StyleSheet,
+//   Text,
+//   TouchableOpacity,
+//   View,
+// } from "react-native";
+
+// // ✅ Define a type for Vault File
+// type VaultFile = {
+//   name: string;
+//   uri: string;
+//   type: "image" | "pdf";
+//   uploadedAt?: string;
+// };
+
+// export default function Bills() {
+//   const router = useRouter();
+//   const [images, setImages] = useState<VaultFile[]>([]);
+//   const [pdfs, setPdfs] = useState<VaultFile[]>([]);
+//   const [showStartPicker, setShowStartPicker] = useState(false);
+//   const [showEndPicker, setShowEndPicker] = useState(false);
+//   const [startDate, setStartDate] = useState(new Date("2024-01-01"));
+//   const [endDate, setEndDate] = useState(new Date("2024-12-31"));
+
+//   // 🧭 Load Vault files from AsyncStorage
+//   const loadVaultFiles = async () => {
+//     const stored = await AsyncStorage.getItem("mockVault");
+//     if (!stored) return;
+//     const data: VaultFile[] = JSON.parse(stored);
+//     setImages(data.filter((f) => f.type === "image"));
+//     setPdfs(data.filter((f) => f.type === "pdf"));
+//   };
+
+//   useEffect(() => {
+//     loadVaultFiles();
+//     const interval = setInterval(loadVaultFiles, 1000);
+//     return () => clearInterval(interval);
+//   }, []);
+
+//   // 🖼️ Open or share document
+//   const handleOpenFile = async (uri: string) => {
+//     await Sharing.shareAsync(uri);
+//   };
+
+//   // 🔹 Mock bills for display
+//   const mockBills = [
+//     {
+//       id: "1",
+//       provider: "Apollo Hospital",
+//       claimNo: "CHM-10234",
+//       amount: "₹ 8,250",
+//       date: "12 Oct 2024",
+//       status: "Approved",
+//     },
+//     {
+//       id: "2",
+//       provider: "Fortis Health",
+//       claimNo: "FRT-45128",
+//       amount: "₹ 5,670",
+//       date: "05 Sep 2024",
+//       status: "Pending",
+//     },
+//   ];
+
+//   return (
+//     <View style={styles.container}>
+//       {/* Header */}
+//       <Text style={styles.title}>My Bills</Text>
+
+//       {/* Filter Section */}
+//       <View style={styles.filterRow}>
+//         <TouchableOpacity
+//           style={styles.dateBox}
+//           onPress={() => setShowStartPicker(true)}
+//         >
+//           <Text style={styles.dateText}>
+//             {startDate.toLocaleDateString("en-US")}
+//           </Text>
+//         </TouchableOpacity>
+
+//         <TouchableOpacity
+//           style={styles.dateBox}
+//           onPress={() => setShowEndPicker(true)}
+//         >
+//           <Text style={styles.dateText}>
+//             {endDate.toLocaleDateString("en-US")}
+//           </Text>
+//         </TouchableOpacity>
+//       </View>
+
+//       {showStartPicker && (
+//         <DateTimePicker
+//           value={startDate}
+//           mode="date"
+//           display="default"
+//           onChange={(e, date) => {
+//             setShowStartPicker(false);
+//             if (date) setStartDate(date);
+//           }}
+//         />
+//       )}
+
+//       {showEndPicker && (
+//         <DateTimePicker
+//           value={endDate}
+//           mode="date"
+//           display="default"
+//           onChange={(e, date) => {
+//             setShowEndPicker(false);
+//             if (date) setEndDate(date);
+//           }}
+//         />
+//       )}
+
+//       {/* Family Member Dropdown Placeholder */}
+//       <View style={styles.dropdownBox}>
+//         <Text style={styles.dropdownText}>All Family Members</Text>
+//       </View>
+
+//       {/* My Vault Section */}
+//       <View style={styles.vaultCard}>
+//         <Text style={styles.vaultTitle}>My Vault - Alex!</Text>
+//         <Text style={styles.vaultDesc}>
+//           This is your personal Vault. Click + icon to upload documents or
+//           images like Statements, EOBs, and Receipts.
+//         </Text>
+//       </View>
+
+//       {/* 🔹 Bills Section */}
+//       {mockBills.map((bill) => (
+//         <View key={bill.id} style={styles.billCard}>
+//           <View style={styles.billHeader}>
+//             <Text style={styles.billTitle}>
+//               {bill.claimNo} - {bill.provider}
+//             </Text>
+//             <Text
+//               style={[
+//                 styles.billStatus,
+//                 {
+//                   backgroundColor:
+//                     bill.status === "Approved" ? "#dcfce7" : "#fef9c3",
+//                   color: bill.status === "Approved" ? "#166534" : "#854d0e",
+//                 },
+//               ]}
+//             >
+//               {bill.status}
+//             </Text>
+//           </View>
+
+//           <Text style={styles.billDetail}>Amount: {bill.amount}</Text>
+//           <Text style={styles.billDetail}>Date: {bill.date}</Text>
+
+//           <View style={styles.billButtonsRow}>
+//             <TouchableOpacity style={styles.billBtn}>
+//               <Text style={styles.billBtnText}>EOB</Text>
+//             </TouchableOpacity>
+//             <TouchableOpacity style={styles.billBtn}>
+//               <Text style={styles.billBtnText}>Statement</Text>
+//             </TouchableOpacity>
+//             <TouchableOpacity style={styles.billBtn}>
+//               <Text style={styles.billBtnText}>Receipts</Text>
+//             </TouchableOpacity>
+//             <TouchableOpacity style={styles.billBtn}>
+//               <Text style={styles.billBtnText}>View Ledger</Text>
+//             </TouchableOpacity>
+//             <TouchableOpacity style={styles.billBtn}>
+//               <Text style={styles.billBtnText}>Scorecard</Text>
+//             </TouchableOpacity>
+
+//             {/* ✅ Schedule Button */}
+//             <TouchableOpacity
+//               style={[styles.billBtn, { backgroundColor: "#4f46e5" }]}
+//               onPress={() => router.push("/screens/bills/schedule")}
+//             >
+//               <Text style={[styles.billBtnText, { color: "#fff" }]}>
+//                 Schedule
+//               </Text>
+//             </TouchableOpacity>
+//           </View>
+//         </View>
+//       ))}
+
+//       <ScrollView showsVerticalScrollIndicator={false}>
+//         {/* Images Section */}
+//         {images.length > 0 && (
+//           <>
+//             <Text style={styles.sectionTitle}>Images</Text>
+//             <FlatList
+//               data={images}
+//               numColumns={2}
+//               keyExtractor={(_, i) => i.toString()}
+//               renderItem={({ item }) => (
+//                 <TouchableOpacity
+//                   style={styles.fileCard}
+//                   onPress={() => handleOpenFile(item.uri)}
+//                 >
+//                   <Image
+//                     source={{ uri: item.uri }}
+//                     style={styles.thumbnail}
+//                     resizeMode="cover"
+//                   />
+//                   <View style={styles.fileFooter}>
+//                     <Text style={styles.fileName} numberOfLines={1}>
+//                       {item.name}
+//                     </Text>
+//                   </View>
+//                 </TouchableOpacity>
+//               )}
+//             />
+//           </>
+//         )}
+
+//         {/* PDFs Section */}
+//         {pdfs.length > 0 && (
+//           <>
+//             <Text style={styles.sectionTitle}>PDFs</Text>
+//             <FlatList
+//               data={pdfs}
+//               numColumns={2}
+//               keyExtractor={(_, i) => i.toString()}
+//               renderItem={({ item }) => (
+//                 <TouchableOpacity
+//                   style={styles.fileCard}
+//                   onPress={() => handleOpenFile(item.uri)}
+//                 >
+//                   <View style={styles.pdfIconContainer}>
+//                     <Ionicons
+//                       name="document-text-outline"
+//                       size={60}
+//                       color="#4f46e5"
+//                     />
+//                   </View>
+//                   <View style={styles.fileFooter}>
+//                     <Text style={styles.fileName} numberOfLines={1}>
+//                       {item.name}
+//                     </Text>
+//                   </View>
+//                 </TouchableOpacity>
+//               )}
+//             />
+//           </>
+//         )}
+//       </ScrollView>
+
+//       {/* Floating Upload Button */}
+//       <TouchableOpacity
+//         style={styles.fab}
+//         onPress={() => router.push("/screens/bills/UplodetoPdf")}
+//       >
+//         <Text style={styles.fabText}>＋</Text>
+//       </TouchableOpacity>
+//     </View>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: "#fff",
+//     paddingHorizontal: 16,
+//     paddingTop: 50,
+//   },
+//   title: {
+//     fontSize: 20,
+//     fontWeight: "700",
+//     textAlign: "center",
+//     marginBottom: 20,
+//   },
+//   filterRow: {
+//     flexDirection: "row",
+//     justifyContent: "space-between",
+//     marginBottom: 10,
+//   },
+//   dateBox: {
+//     flex: 0.48,
+//     backgroundColor: "#f3f4f6",
+//     borderRadius: 8,
+//     padding: 12,
+//   },
+//   dateText: { color: "#111", fontWeight: "600", textAlign: "center" },
+//   dropdownBox: {
+//     backgroundColor: "#f3f4f6",
+//     borderRadius: 8,
+//     padding: 12,
+//     marginBottom: 20,
+//   },
+//   dropdownText: { color: "#555", textAlign: "center" },
+//   vaultCard: {
+//     backgroundColor: "#f9fafb",
+//     borderRadius: 12,
+//     padding: 16,
+//     marginBottom: 20,
+//     borderWidth: 1,
+//     borderColor: "#e5e7eb",
+//   },
+//   vaultTitle: { fontWeight: "700", fontSize: 16, color: "#111", marginBottom: 4 },
+//   vaultDesc: { color: "#555", fontSize: 13 },
+
+//   // 🔹 Bills section
+//   billCard: {
+//     backgroundColor: "#f9fafb",
+//     borderRadius: 12,
+//     padding: 16,
+//     borderWidth: 1,
+//     borderColor: "#e5e7eb",
+//     marginBottom: 20,
+//   },
+//   billHeader: {
+//     flexDirection: "row",
+//     justifyContent: "space-between",
+//     alignItems: "center",
+//     marginBottom: 8,
+//   },
+//   billTitle: { fontWeight: "700", color: "#111", fontSize: 15 },
+//   billStatus: {
+//     fontWeight: "600",
+//     fontSize: 12,
+//     paddingVertical: 2,
+//     paddingHorizontal: 8,
+//     borderRadius: 6,
+//   },
+//   billDetail: { color: "#555", fontSize: 13, marginBottom: 2 },
+//   billButtonsRow: {
+//     flexDirection: "row",
+//     flexWrap: "wrap",
+//     marginTop: 10,
+//     gap: 8,
+//   },
+//   billBtn: {
+//     borderWidth: 1,
+//     borderColor: "#d1d5db",
+//     borderRadius: 8,
+//     paddingVertical: 6,
+//     paddingHorizontal: 10,
+//     backgroundColor: "#fff",
+//   },
+//   billBtnText: { color: "#111", fontWeight: "600", fontSize: 13 },
+
+//   // Vault section
+//   sectionTitle: {
+//     fontWeight: "700",
+//     fontSize: 16,
+//     marginVertical: 10,
+//     color: "#111",
+//   },
+//   fileCard: {
+//     width: "47%",
+//     backgroundColor: "#fff",
+//     borderRadius: 10,
+//     borderWidth: 1,
+//     borderColor: "#e5e7eb",
+//     margin: 5,
+//     overflow: "hidden",
+//     elevation: 2,
+//   },
+//   thumbnail: { width: "100%", height: 120 },
+//   pdfIconContainer: {
+//     height: 120,
+//     alignItems: "center",
+//     justifyContent: "center",
+//     backgroundColor: "#eef2ff",
+//   },
+//   fileFooter: {
+//     backgroundColor: "#f3f4f6",
+//     paddingVertical: 6,
+//     paddingHorizontal: 8,
+//     alignItems: "center",
+//   },
+//   fileName: { fontSize: 12, fontWeight: "600", color: "#111" },
+//   fab: {
+//     position: "absolute",
+//     right: 20,
+//     bottom: 30,
+//     backgroundColor: "#4f46e5",
+//     width: 55,
+//     height: 55,
+//     borderRadius: 30,
+//     alignItems: "center",
+//     justifyContent: "center",
+//     elevation: 4,
+//   },
+//   fabText: { color: "#fff", fontSize: 28, lineHeight: 28 },
+// });
+
+
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -1337,7 +1731,6 @@ import {
   View,
 } from "react-native";
 
-// ✅ Define a type for Vault File
 type VaultFile = {
   name: string;
   uri: string;
@@ -1354,7 +1747,7 @@ export default function Bills() {
   const [startDate, setStartDate] = useState(new Date("2024-01-01"));
   const [endDate, setEndDate] = useState(new Date("2024-12-31"));
 
-  // 🧭 Load Vault files from AsyncStorage
+  // Load Vault Files
   const loadVaultFiles = async () => {
     const stored = await AsyncStorage.getItem("mockVault");
     if (!stored) return;
@@ -1369,12 +1762,11 @@ export default function Bills() {
     return () => clearInterval(interval);
   }, []);
 
-  // 🖼️ Open or share document
   const handleOpenFile = async (uri: string) => {
     await Sharing.shareAsync(uri);
   };
 
-  // 🔹 Mock bills for display
+  // Mock Bills
   const mockBills = [
     {
       id: "1",
@@ -1396,7 +1788,6 @@ export default function Bills() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <Text style={styles.title}>My Bills</Text>
 
       {/* Filter Section */}
@@ -1444,7 +1835,7 @@ export default function Bills() {
         />
       )}
 
-      {/* Family Member Dropdown Placeholder */}
+      {/* Family Dropdown */}
       <View style={styles.dropdownBox}>
         <Text style={styles.dropdownText}>All Family Members</Text>
       </View>
@@ -1453,12 +1844,12 @@ export default function Bills() {
       <View style={styles.vaultCard}>
         <Text style={styles.vaultTitle}>My Vault - Alex!</Text>
         <Text style={styles.vaultDesc}>
-          This is your personal Vault. Click + icon to upload documents or
+          This is your personal Vault. Click the + icon to upload documents or
           images like Statements, EOBs, and Receipts.
         </Text>
       </View>
 
-      {/* 🔹 Bills Section */}
+      {/* Bills Section */}
       {mockBills.map((bill) => (
         <View key={bill.id} style={styles.billCard}>
           <View style={styles.billHeader}>
@@ -1482,28 +1873,48 @@ export default function Bills() {
           <Text style={styles.billDetail}>Amount: {bill.amount}</Text>
           <Text style={styles.billDetail}>Date: {bill.date}</Text>
 
+          {/* Buttons Row */}
           <View style={styles.billButtonsRow}>
             <TouchableOpacity style={styles.billBtn}>
+              <Ionicons name="document-text-outline" size={16} color="#111" />
               <Text style={styles.billBtnText}>EOB</Text>
             </TouchableOpacity>
+
             <TouchableOpacity style={styles.billBtn}>
+              <Ionicons name="reader-outline" size={16} color="#111" />
               <Text style={styles.billBtnText}>Statement</Text>
             </TouchableOpacity>
+
             <TouchableOpacity style={styles.billBtn}>
+              <Ionicons name="receipt-outline" size={16} color="#111" />
               <Text style={styles.billBtnText}>Receipts</Text>
             </TouchableOpacity>
+
             <TouchableOpacity style={styles.billBtn}>
+              <Ionicons name="book-outline" size={16} color="#111" />
               <Text style={styles.billBtnText}>View Ledger</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.billBtn}>
+
+            {/* ✅ Scorecard Redirection Fixed */}
+            <TouchableOpacity
+              style={styles.billBtn}
+              onPress={() =>
+                router.push({
+                  pathname: "/screens/bills/scorecard",
+                  params: { source: "bills" },
+                })
+              }
+            >
+              <Ionicons name="star-outline" size={16} color="#111" />
               <Text style={styles.billBtnText}>Scorecard</Text>
             </TouchableOpacity>
 
-            {/* ✅ Schedule Button */}
+            {/* Schedule */}
             <TouchableOpacity
               style={[styles.billBtn, { backgroundColor: "#4f46e5" }]}
               onPress={() => router.push("/screens/bills/schedule")}
             >
+              <Ionicons name="calendar-outline" size={16} color="#fff" />
               <Text style={[styles.billBtnText, { color: "#fff" }]}>
                 Schedule
               </Text>
@@ -1513,7 +1924,7 @@ export default function Bills() {
       ))}
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Images Section */}
+        {/* Images */}
         {images.length > 0 && (
           <>
             <Text style={styles.sectionTitle}>Images</Text>
@@ -1542,7 +1953,7 @@ export default function Bills() {
           </>
         )}
 
-        {/* PDFs Section */}
+        {/* PDFs */}
         {pdfs.length > 0 && (
           <>
             <Text style={styles.sectionTitle}>PDFs</Text>
@@ -1586,36 +1997,12 @@ export default function Bills() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "700",
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  filterRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 10,
-  },
-  dateBox: {
-    flex: 0.48,
-    backgroundColor: "#f3f4f6",
-    borderRadius: 8,
-    padding: 12,
-  },
+  container: { flex: 1, backgroundColor: "#fff", paddingHorizontal: 16, paddingTop: 50 },
+  title: { fontSize: 20, fontWeight: "700", textAlign: "center", marginBottom: 20 },
+  filterRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 10 },
+  dateBox: { flex: 0.48, backgroundColor: "#f3f4f6", borderRadius: 8, padding: 12 },
   dateText: { color: "#111", fontWeight: "600", textAlign: "center" },
-  dropdownBox: {
-    backgroundColor: "#f3f4f6",
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 20,
-  },
+  dropdownBox: { backgroundColor: "#f3f4f6", borderRadius: 8, padding: 12, marginBottom: 20 },
   dropdownText: { color: "#555", textAlign: "center" },
   vaultCard: {
     backgroundColor: "#f9fafb",
@@ -1628,7 +2015,6 @@ const styles = StyleSheet.create({
   vaultTitle: { fontWeight: "700", fontSize: 16, color: "#111", marginBottom: 4 },
   vaultDesc: { color: "#555", fontSize: 13 },
 
-  // 🔹 Bills section
   billCard: {
     backgroundColor: "#f9fafb",
     borderRadius: 12,
@@ -1637,28 +2023,15 @@ const styles = StyleSheet.create({
     borderColor: "#e5e7eb",
     marginBottom: 20,
   },
-  billHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 8,
-  },
+  billHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 8 },
   billTitle: { fontWeight: "700", color: "#111", fontSize: 15 },
-  billStatus: {
-    fontWeight: "600",
-    fontSize: 12,
-    paddingVertical: 2,
-    paddingHorizontal: 8,
-    borderRadius: 6,
-  },
+  billStatus: { fontWeight: "600", fontSize: 12, paddingVertical: 2, paddingHorizontal: 8, borderRadius: 6 },
   billDetail: { color: "#555", fontSize: 13, marginBottom: 2 },
-  billButtonsRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 10,
-    gap: 8,
-  },
+  billButtonsRow: { flexDirection: "row", flexWrap: "wrap", marginTop: 10, gap: 8 },
   billBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
     borderWidth: 1,
     borderColor: "#d1d5db",
     borderRadius: 8,
@@ -1667,14 +2040,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   billBtnText: { color: "#111", fontWeight: "600", fontSize: 13 },
-
-  // Vault section
-  sectionTitle: {
-    fontWeight: "700",
-    fontSize: 16,
-    marginVertical: 10,
-    color: "#111",
-  },
+  sectionTitle: { fontWeight: "700", fontSize: 16, marginVertical: 10, color: "#111" },
   fileCard: {
     width: "47%",
     backgroundColor: "#fff",
@@ -1686,18 +2052,8 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   thumbnail: { width: "100%", height: 120 },
-  pdfIconContainer: {
-    height: 120,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#eef2ff",
-  },
-  fileFooter: {
-    backgroundColor: "#f3f4f6",
-    paddingVertical: 6,
-    paddingHorizontal: 8,
-    alignItems: "center",
-  },
+  pdfIconContainer: { height: 120, alignItems: "center", justifyContent: "center", backgroundColor: "#eef2ff" },
+  fileFooter: { backgroundColor: "#f3f4f6", paddingVertical: 6, paddingHorizontal: 8, alignItems: "center" },
   fileName: { fontSize: 12, fontWeight: "600", color: "#111" },
   fab: {
     position: "absolute",
